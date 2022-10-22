@@ -2,4 +2,4 @@
 Game project in python inspired by the "Space Invaders" game
 
 
-This my another game project inspired by the old aracade Shoot 'em up up games.
+This is my another game project. This one is inspired by the old aracade Shoot 'em up up games.
