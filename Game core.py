@@ -1,7 +1,9 @@
 #Core of the game with all the classes, methods, functions and my commentary
 
 import pygame
-
+import  os
+import time
+import random
 
 #game window
 width=900
@@ -40,3 +42,8 @@ def core():
 
     while run:
         clock_check.tick(FPS) #our game will stay consistent in terms of run speed
+
+
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                run=False
