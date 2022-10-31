@@ -51,6 +51,7 @@ class ship:
         window.blit(self.ship_img,(self.x,self.y))
 
     #actual height and width of ship image
+
     def get_width(self):
         return self.ship_img.get_width()
     def get_height(self):
