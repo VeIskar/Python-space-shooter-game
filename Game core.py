@@ -20,8 +20,8 @@ red_enemy=pygame.image.load('px_ship_red_small_enemy.png')
 green_enemy=pygame.image.load('px_ship_green_small_enemy.png')
 blue_enemy=pygame.image.load('px_ship_blue_enemy_large.png')
 
-#players ship
-players_spaceship=pygame.image.load('px_spaceship_player.png')
+#resized players ship
+players_spaceship=pygame.transform.scale((pygame.image.load('px_spaceship_player.png')),(100,90))
 
 #projectiles
 
@@ -50,12 +50,21 @@ class ship:
     def draw(self,window):
         window.blit(self.ship_img,(self.x,self.y))
 
+    #actual height and width of ship image
+    def get_width(self):
+        return self.ship_img.get_width()
+    def get_height(self):
+        return  self.ship_img.get_height()
+
+
+
 
 #player calss will iherit from the general ship class
 class player(ship):
     def __init__(self,x,y,health=100):
         #calling initialization from general class
         super().__init__(x,y,health)
+        #self.ship_img=players_spaceship
         self.ship_img=players_spaceship
         self.laser_img=yellow_laser
 
@@ -106,11 +115,11 @@ def core():
         keys_movement=pygame.key.get_pressed()
         if keys_movement[pygame.K_LEFT] and players_ship.x -vel_player>0: #moving left with borders
             players_ship.x -=vel_player
-        if keys_movement[pygame.K_RIGHT] and players_ship.x +vel_player + 30<width: #moving right with borders
+        if keys_movement[pygame.K_RIGHT] and players_ship.x +vel_player + player.get_width()<width: #moving right with borders
             players_ship.x += vel_player
         if keys_movement[pygame.K_UP] and players_ship.y -vel_player >0: #moving up with borders
             players_ship.y -= vel_player
-        if keys_movement[pygame.K_DOWN] and players_ship.y +vel_player +30<height: #moving down with borders
+        if keys_movement[pygame.K_DOWN] and players_ship.y +vel_player + player.get_height()<height: #moving down with borders
             players_ship.y +=vel_player
 
 
