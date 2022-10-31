@@ -52,12 +52,12 @@ class ship:
 
     #actual height and width of ship image
 
+
+    def get_height(self):
+        return self.ship_img.get_height()
+
     def get_width(self):
         return self.ship_img.get_width()
-    def get_height(self):
-        return  self.ship_img.get_height()
-
-
 
 
 #player calss will iherit from the general ship class
@@ -116,11 +116,11 @@ def core():
         keys_movement=pygame.key.get_pressed()
         if keys_movement[pygame.K_LEFT] and players_ship.x -vel_player>0: #moving left with borders
             players_ship.x -=vel_player
-        if keys_movement[pygame.K_RIGHT] and players_ship.x +vel_player + player.get_width()<width: #moving right with borders
+        if keys_movement[pygame.K_RIGHT] and players_ship.x +vel_player + players_ship.get_width() <width: #moving right with borders
             players_ship.x += vel_player
         if keys_movement[pygame.K_UP] and players_ship.y -vel_player >0: #moving up with borders
             players_ship.y -= vel_player
-        if keys_movement[pygame.K_DOWN] and players_ship.y +vel_player + player.get_height()<height: #moving down with borders
+        if keys_movement[pygame.K_DOWN] and players_ship.y +vel_player + players_ship.get_height() <height: #moving down with borders
             players_ship.y +=vel_player
 
 
