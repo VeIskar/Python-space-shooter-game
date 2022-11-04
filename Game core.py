@@ -74,6 +74,9 @@ class player(ship):
         self.max_healath=health
 
 
+class enemy(ship):
+    def __init__(self,x,y,health=100):
+        super().__init__(x, y, health)
 
 def core():
     run=True
