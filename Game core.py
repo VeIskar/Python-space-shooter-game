@@ -74,9 +74,25 @@ class player(ship):
         self.max_healath=health
 
 
-class enemy(ship):
-    def __init__(self,x,y,health=100):
+#creating enemy class (similar in construction design to 2 previous ships) enemy ships will have different colors (green, red, blue)
+class enemy_(ship):
+    #using dictionary to display different ships and their assets based on their color:
+    color_enm_dict={"red":(red_enemy,red_laser),
+                    "blue":(blue_enemy,blue_laser),
+                    "green":(green_enemy,green_laser)}
+
+
+    def __init__(self,x,y,color,health=100):
         super().__init__(x, y, health)
+        #we dont need draw method since its inherited
+        self.ship_img,self.laser_img=self.color_enm_dict[color]
+        #mask
+        self.mask = pygame.mask.from_surface(self.ship_img)
+
+    def movement(self,vel):
+        #enemy ships will move only down
+        self.y+=vel
+
 
 def core():
     run=True
@@ -84,7 +100,12 @@ def core():
     #checking if player moves "x" number of Frames per second
     clock_check=pygame.time.Clock()
 
-    lvl=1
+    enemeis=[]
+    amount_enem=5 #enemies will come in waves with increasing amounts
+    vel_enemy=5
+
+
+    lvl=0
     player_lives=5
     message_font=pygame.font.SysFont("TTF",35)
 
@@ -103,13 +124,25 @@ def core():
         window.blit(lives_label,(10,10))
         window.blit(level_label,(width-level_label.get_width()-10,10))
 
+        #displaying enemies on screen
+        for enemy in enemeis:
+            enemy.draw(window)
+
         players_ship.draw(window)
 
         pygame.display.update()
 
     while run:
         clock_check.tick(FPS) #our game will stay consistent in terms of run speed
-        refresh_screen()
+
+        if len(enemeis)==0:
+            lvl+=1
+            amount_enem+=5
+            for i in range(amount_enem):
+                #spawning enemies and appending them to list                *(lvl//5+lvl%5)
+                enem=enemy_(random.randrange(50,width-100),random.randrange(-1234,-100),random.choice(["red","blue","green"]))
+                #all of the enemies will be spawned off screen while moving at the same speed singualr ships will have different positions making the "illusion" of moving in different duration
+                enemeis.append(enem)
 
         #checking if player closed the game
         for event in pygame.event.get():
@@ -126,7 +159,11 @@ def core():
         if keys_movement[pygame.K_DOWN] and players_ship.y +vel_player + players_ship.get_height() <height: #moving down with borders
             players_ship.y +=vel_player
 
+        for enemy in enemeis:
+            enemy.movement(vel_enemy)
 
+
+        refresh_screen()
 
 
 #initializing the game
