@@ -99,15 +99,18 @@ def core():
     FPS=60
     #checking if player moves "x" number of Frames per second
     clock_check=pygame.time.Clock()
+    lose=False
+    gamoverscreen_dispaly_time=0
 
     enemeis=[]
     amount_enem=5 #enemies will come in waves with increasing amounts
-    vel_enemy=5
+    vel_enemy=4
 
 
     lvl=0
     player_lives=5
     message_font=pygame.font.SysFont("TTF",35)
+    game_over_font=pygame.font.SysFont("TTF",70)
 
     vel_player=5 #velocity of palyer how fast he moves
     players_ship=player(420,800)
@@ -130,10 +133,28 @@ def core():
 
         players_ship.draw(window)
 
+        if lose is True:
+            g_over_label = game_over_font.render("GAME OVER", 1, (255, 255, 255))
+            window.blit(g_over_label,(width/2-g_over_label.get_width()/2,350))
+            #center of screen is widht/2 but we draw from top left
+
+
         pygame.display.update()
 
     while run:
         clock_check.tick(FPS) #our game will stay consistent in terms of run speed
+        refresh_screen()
+
+        if player_lives<=0 or players_ship.health<=0:
+            lose=True
+            gamoverscreen_dispaly_time+=1
+
+        if lose:
+            if gamoverscreen_dispaly_time>FPS*5: #the displaying time of game over screen will last 5 seconds after which we quit game
+                run=False
+            else: #since GAME OVER message will be on screen for some time we will need to wait before game closes while also not doing any further operations
+                continue
+
 
         if len(enemeis)==0:
             lvl+=1
@@ -159,11 +180,15 @@ def core():
         if keys_movement[pygame.K_DOWN] and players_ship.y +vel_player + players_ship.get_height() <height: #moving down with borders
             players_ship.y +=vel_player
 
-        for enemy in enemeis:
+        for enemy in enemeis[:]: #copy of enemies we dont modify list we are looping through
             enemy.movement(vel_enemy)
+            #removing enemies
+            if enemy.y+enemy.get_height()>height:
+                player_lives-=1
+                enemeis.remove(enemy)
 
 
-        refresh_screen()
+
 
 
 #initializing the game
