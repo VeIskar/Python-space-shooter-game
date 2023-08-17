@@ -53,11 +53,32 @@ class ship:
     #actual height and width of ship image
 
 
+
     def get_height(self):
         return self.ship_img.get_height()
 
     def get_width(self):
         return self.ship_img.get_width()
+
+
+#laser projectile bullet
+class Laser:
+    def __init__(self,x,y,img):
+        self.x = x
+        self.y = y
+        self.img = img
+        self.mask = pygame.mask.from_surface(self.img)
+    
+    def draw(self, window):
+        window.blit(self.img, (self.x, self.y))
+    def move(self, vel):
+        self.y+= vel
+    def off_screen(self, height):
+        return self.y<= height and self.y>= 0
+    def collision(self, obj):
+        return collide(self, obj)
+
+
 
 
 #player calss will iherit from the general ship class
@@ -92,6 +113,13 @@ class enemy_(ship):
     def movement(self,vel):
         #enemy ships will move only down
         self.y+=vel
+
+
+def collide(obj_1, obj_2):
+    offset_x = obj_2.x - obj_1.x #distance from object 1 to 2
+    offset_y = obj_2.y - obj_1.y
+    return obj_1.mask.overlap(obj_2.mask, (offset_x, offset_y)) !=None
+    #bool function telling if masks overlap
 
 
 def core():
