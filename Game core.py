@@ -49,6 +49,42 @@ class ship:
 
     def draw(self,window):
         window.blit(self.ship_img,(self.x,self.y))
+        #creating lasers
+        for laser in self.lasers:
+            laser.draw(window)
+    
+    def move_lasers(self,velocity,objs):
+        self.cooldown_handler() #handler increments when lasers move
+        for laser in self.lasers:
+            laser.move(velocity)
+
+        if laser.off_screen(height):
+            self.lasers.remove(laser)
+        elif laser.collision(objs):
+            objs.health -=10
+            self.lasers.remove(laser)
+
+
+    #cooldown
+    CooldownTime=30
+
+    #handling the counting of cooldown
+    def cooldown_handler(self):
+        if self.cooldoown>=self.CooldownTime:
+            self.cooldown_handler=0
+
+        if self.cooldown_handler>0:
+            self.cooldown_handler+=1
+        
+    
+    def shoot_laser(self):
+        if self.cooldoown==0:
+            laser_ =Laser(self.x,self.y,self.laser_img)
+            self.lasers.append(laser_)
+
+            # satrting cooldown again
+            self.cooldoown=1
+            
 
     #actual height and width of ship image
 
@@ -207,6 +243,8 @@ def core():
             players_ship.y -= vel_player
         if keys_movement[pygame.K_DOWN] and players_ship.y +vel_player + players_ship.get_height() <height: #moving down with borders
             players_ship.y +=vel_player
+        if keys_movement[pygame.K_SPACE]: #shooting laser
+            players_ship.shoot_laser() 
 
         for enemy in enemeis[:]: #copy of enemies we dont modify list we are looping through
             enemy.movement(vel_enemy)
