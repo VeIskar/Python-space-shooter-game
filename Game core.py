@@ -55,12 +55,12 @@ class ship:
     
     def move_lasers(self,velocity,objs):
         self.cooldown_handler() #handler increments when lasers move
-        for laser in self.lasers:
+        for laser in self.lasers: #each laser that player shoots is displayed on screen moving
             laser.move(velocity)
 
-        if laser.off_screen(height):
+        if laser.off_screen(height): #removing if offscreen
             self.lasers.remove(laser)
-        elif laser.collision(objs):
+        elif laser.collision(objs): #if laser hits health gets reduced
             objs.health -=10
             self.lasers.remove(laser)
 
@@ -110,7 +110,7 @@ class Laser:
     def move(self, vel):
         self.y+= vel
     def off_screen(self, height):
-        return self.y<= height and self.y>= 0
+        return not (self.y<= height and self.y>= 0)
     def collision(self, obj):
         return collide(self, obj)
 
@@ -129,6 +129,20 @@ class player(ship):
         #creating mask for perfect pixel collision
         self.mask=pygame.mask.from_surface(self.ship_img) #mask tells us where pixels are this will help us create much better hitbox
         self.max_healath=health
+    
+    #players laser method
+    def move_lasers(self,velocity,objs):
+        self.cooldown_handler() #handler increments when lasers move
+        for laser in self.lasers: 
+            laser.move(velocity)
+
+        if laser.off_screen(height): 
+            self.lasers.remove(laser)
+        else:
+            for obj in objs:
+                if laser.collision(objs):                   
+                    objs.remove(obj) #enemy gets removed if hit
+                    self.lasers.remove(laser)
 
 
 #creating enemy class (similar in construction design to 2 previous ships) enemy ships will have different colors (green, red, blue)
@@ -177,6 +191,7 @@ def core():
     game_over_font=pygame.font.SysFont("TTF",70)
 
     vel_player=5 #velocity of palyer how fast he moves
+    laser_vel=4
     players_ship=player(420,800)
 
     #redrawing everything and refreshing
@@ -248,10 +263,13 @@ def core():
 
         for enemy in enemeis[:]: #copy of enemies we dont modify list we are looping through
             enemy.movement(vel_enemy)
+            enemy.move_lasers(laser_vel,player)
             #removing enemies
             if enemy.y+enemy.get_height()>height:
                 player_lives-=1
                 enemeis.remove(enemy)
+        
+        player.move_lasers(-laser_vel, enemeis) #negative velocity so it goes up
 
 
 
