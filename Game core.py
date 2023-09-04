@@ -264,6 +264,14 @@ def core():
         for enemy in enemeis[:]: #copy of enemies we dont modify list we are looping through
             enemy.movement(vel_enemy)
             enemy.move_lasers(laser_vel,player)
+
+            if random.randrange(0,120) is True: #enemy shoot at random pace
+                enemy.shoot_laser()
+            
+            if collide(enemy,players_ship): #player and enemy collision
+                players_ship.health-=10
+                enemy.remove(enemy)
+ 
             #removing enemies
             if enemy.y+enemy.get_height()>height:
                 player_lives-=1
