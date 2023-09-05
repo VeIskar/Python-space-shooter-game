@@ -143,6 +143,16 @@ class player(ship):
                 if laser.collision(objs):                   
                     objs.remove(obj) #enemy gets removed if hit
                     self.lasers.remove(laser)
+    
+    def healthbar(self):
+        pygame.draw.rect(window,(255,0,0), (self.x. self.y + self.ship_img.get.height() + 10, self.ship_img.get.width(),10)) #red bar when damaged
+        pygame.draw.rect(window,(0,100,0), (self.x. self.y + self.ship_img.get.height() + 10, 
+                                    self.ship_img.get.width()*(1-((self.max_healath - self.healath )//self.max_healath)),10)) #green bar acutal health
+    
+    def draw(self, window):
+        super().draw(window)
+        self.healthbar(window)
+                                    
 
 
 #creating enemy class (similar in construction design to 2 previous ships) enemy ships will have different colors (green, red, blue)
@@ -170,6 +180,13 @@ def collide(obj_1, obj_2):
     offset_y = obj_2.y - obj_1.y
     return obj_1.mask.overlap(obj_2.mask, (offset_x, offset_y)) !=None
     #bool function telling if masks overlap
+
+def bool_enemy_col(current_enm,spawned_enms): #checking if enemies collide
+    for enemy in spawned_enms:
+        if collide(current_enm,spawned_enms):
+            return True
+    return False
+
 
 
 def core():
@@ -242,7 +259,10 @@ def core():
                 #spawning enemies and appending them to list                *(lvl//5+lvl%5)
                 enem=enemy_(random.randrange(50,width-100),random.randrange(-1234,-100),random.choice(["red","blue","green"]))
                 #all of the enemies will be spawned off screen while moving at the same speed singualr ships will have different positions making the "illusion" of moving in different duration
-                enemeis.append(enem)
+                
+                #checking if enemies dont collide:
+                if not bool_enemy_col(enem, enemeis):
+                    enemeis.append(enem)
 
         #checking if player closed the game
         for event in pygame.event.get():
