@@ -295,13 +295,26 @@ def core():
             #removing enemies
             if enemy.y+enemy.get_height()>height:
                 player_lives-=1
-                enemeis.remove(enemy)
-        
+                enemeis.remove(enemy)    
         player.move_lasers(-laser_vel, enemeis) #negative velocity so it goes up
 
 
+def menu():
+    run = True
+    t_font = pygame.font.SysFont("comicsans",70)
+    t_text= t_font.render("Press any button to begin",1, (255,255,255))
+    while run:
+        #displaying text of menu
+        window.blit(background1,(0,0))
 
+        pygame.display.update()
 
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                run = False
+            if event.type==pygame.MOUSEBUTTONDOWN:
+                core()
+    pygame.quit()
 
 #initializing the game
 core()
