@@ -136,13 +136,14 @@ class player(ship):
         for laser in self.lasers: 
             laser.move(velocity)
 
-        if laser.off_screen(height): 
-            self.lasers.remove(laser)
-        else:
-            for obj in objs:
-                if laser.collision(objs):                   
-                    objs.remove(obj) #enemy gets removed if hit
-                    self.lasers.remove(laser)
+            if laser.off_screen(height): 
+                self.lasers.remove(laser)
+            else:
+                for obj in objs:
+                    if laser.collision(objs):                   
+                        objs.remove(obj) #enemy gets removed if hit
+                        if laser in self.lasers:
+                            self.lasers.remove(laser)
     
     def healthbar(self):
         pygame.draw.rect(window,(255,0,0), (self.x. self.y + self.ship_img.get.height() + 10, self.ship_img.get.width(),10)) #red bar when damaged
@@ -191,6 +192,7 @@ def bool_enemy_col(current_enm,spawned_enms): #checking if enemies collide
 
 def core():
     run=True
+    is_paused=False
     FPS=60
     #checking if player moves "x" number of Frames per second
     clock_check=pygame.time.Clock()
@@ -263,23 +265,33 @@ def core():
                 #checking if enemies dont collide:
                 if not bool_enemy_col(enem, enemeis):
                     enemeis.append(enem)
+                
 
         #checking if player closed the game
         for event in pygame.event.get():
-            if event.type==pygame.QUIT:
-                run=False
+            if event.type==pygame.QUIT:               
+                quit()
+            elif event.type==pygame.KEYDOWN: #pausing the game
+                if event.key==pygame.K_p:
+                    is_paused = True
+            
 
         keys_movement=pygame.key.get_pressed()
-        if keys_movement[pygame.K_LEFT] and players_ship.x -vel_player>0: #moving left with borders
-            players_ship.x -=vel_player
-        if keys_movement[pygame.K_RIGHT] and players_ship.x +vel_player + players_ship.get_width() <width: #moving right with borders
-            players_ship.x += vel_player
-        if keys_movement[pygame.K_UP] and players_ship.y -vel_player >0: #moving up with borders
-            players_ship.y -= vel_player
-        if keys_movement[pygame.K_DOWN] and players_ship.y +vel_player + players_ship.get_height() <height: #moving down with borders
-            players_ship.y +=vel_player
-        if keys_movement[pygame.K_SPACE]: #shooting laser
-            players_ship.shoot_laser() 
+        
+        if not is_paused:
+            if keys_movement[pygame.K_LEFT] and players_ship.x -vel_player>0: #moving left with borders
+                players_ship.x -=vel_player
+            if keys_movement[pygame.K_RIGHT] and players_ship.x +vel_player + players_ship.get_width() <width: #moving right with borders
+                players_ship.x += vel_player
+            if keys_movement[pygame.K_UP] and players_ship.y -vel_player >0: #moving up with borders
+                players_ship.y -= vel_player
+            if keys_movement[pygame.K_DOWN] and players_ship.y +vel_player + players_ship.get_height() <height: #moving down with borders
+                players_ship.y +=vel_player
+            if keys_movement[pygame.K_SPACE]: #shooting laser
+                players_ship.shoot_laser()
+        else:
+            pausedgame()
+        
 
         for enemy in enemeis[:]: #copy of enemies we dont modify list we are looping through
             enemy.movement(vel_enemy)
@@ -298,14 +310,29 @@ def core():
                 enemeis.remove(enemy)    
         player.move_lasers(-laser_vel, enemeis) #negative velocity so it goes up
 
+        pygame.display.update()
+
+
+def pausedgame():
+     
+     window.blit(background1,(0,0))
+     t_font = pygame.font.SysFont("comicsans",60)
+     t_text= t_font.render("GAME PAUSED",1, (255,255,255))
+     window.blit(t_text, (width/2 -t_text.get_width()/2, 350 ))
 
 def menu():
     run = True
     t_font = pygame.font.SysFont("comicsans",70)
-    t_text= t_font.render("Press any button to begin",1, (255,255,255))
+    t_font_other = pygame.font.SysFont("comicsans",30)
+    
     while run:
         #displaying text of menu
         window.blit(background1,(0,0))
+        t_text= t_font.render("Press any button to begin",1, (255,255,255))
+        t_pause_opt= t_font_other.render("Press P to pause the game",1,(255,255,255))
+        
+        window.blit(t_text, (width/2 -t_text.get_width()/2, 350 )) #text appears in the middle of screen
+        window.blit(t_pause_opt, (width/2 -t_text.get_width()/2, 310)) #additional option displayed
 
         pygame.display.update()
 
@@ -316,5 +343,8 @@ def menu():
                 core()
     pygame.quit()
 
+
+
+
 #initializing the game
-core()
+menu()
