@@ -129,6 +129,9 @@ class player(ship):
         #creating mask for perfect pixel collision
         self.mask=pygame.mask.from_surface(self.ship_img) #mask tells us where pixels are this will help us create much better hitbox
         self.max_healath=health
+        
+        #current players score
+        self.current_score=0
     
     #players laser method
     def move_lasers(self,velocity,objs):
@@ -142,6 +145,7 @@ class player(ship):
                 for obj in objs:
                     if laser.collision(objs):                   
                         objs.remove(obj) #enemy gets removed if hit
+                        current_score+=10 #score increments
                         if laser in self.lasers:
                             self.lasers.remove(laser)
     
@@ -220,10 +224,12 @@ def core():
         #drawing text
         lives_label=message_font.render(f"Players lives: {player_lives}",1,(255,255,255))
         level_label=message_font.render(f"Level: {lvl}",1,(255,255,255))
+        score_label=message_font.render(f'Score: {players_ship.current_score}',1,(255,255,255))
 
         #dispalying text
         window.blit(lives_label,(10,10))
         window.blit(level_label,(width-level_label.get_width()-10,10))
+        window.blit(score_label,(width-level_label.get_width()-10,25))
 
         #displaying enemies on screen
         for enemy in enemeis:
@@ -307,7 +313,10 @@ def core():
             #removing enemies
             if enemy.y+enemy.get_height()>height:
                 player_lives-=1
-                enemeis.remove(enemy)    
+                enemeis.remove(enemy)
+
+            #score increasing if we hit enemy
+                    
         player.move_lasers(-laser_vel, enemeis) #negative velocity so it goes up
 
         pygame.display.update()
