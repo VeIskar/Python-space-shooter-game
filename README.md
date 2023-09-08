@@ -1,13 +1,13 @@
 # Python-space-shooter-game
+
 Game project in python inspired by the "Space Invaders" game
 
-
-This is my another game project. This one is inspired by the old aracade Shoot 'em up up games.
+This is my another game project. This one is inspired by the old aracade Shoot 'em up up games. I took inspirations from some of the online Pygame courses while making this game.
 Almost all of the spaceships sprites have been done by me in GIMP. Backgorunds are a collage made of different free asset pxiel space backgrounds.
 
 ## Assets
 
-**Spaceship Sprites**: Almost all of the spaceship sprites used in the game were designed by me using GIMP.
+**Spaceships and projectiles Sprites**: Almost all of the spaceships sprites and projectiles used in the game were designed by me using GIMP.
 
 **Backgrounds**: The game's backgrounds are a collage assembled from various freely available pixel space backgrounds.I used some of the free backgrounds that could be found on https://wallhere.com/ such as: https://wallhere.com/en/wallpaper/106712
 
@@ -19,8 +19,28 @@ Almost all of the spaceships sprites have been done by me in GIMP. Backgorunds a
 
 **Spaceship moveset**: you can fly the ship on the map in all the 4 directions using keyboard arrows.
 
+**Shooting mechanic**: player can shoot laser at the enemies, while enemies can shoot laser projectiles at player, getting hit too many times also means losing
+
+**Main menu and simple options**: game has a simple main menu and option to pause the game using "P" on keyboard
+
+**Score, level and lives labels**: players current level score and remaining lives are all displayed onto the screen
+
 **Player lives and GAME OVER screen**: player has limited amount of lives that decrease after enemies pass through the bottom border of the screen once it reaches 0 GAME OVER text will appear on screen and then close the game.
 
+## Set up and Usage
+
+To run this game project, follow these steps:
+
+1. Make sure you have python 3.8 or newer installed.
+
+2. Install pygame using pip.
+
+3. Clone or download the repository.
+
+4. Open the solution in your preferred IDE.
+
+5. Run and play the game.
 
 
-Expect more changes and updates in the near future
+
+Readme file will be updated in case of any new features being added to the game
