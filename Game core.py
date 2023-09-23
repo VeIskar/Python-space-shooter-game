@@ -45,7 +45,7 @@ class ship:
         self.ship_img=None
         self.laser_img=None
         self.lasers=[]
-        self.cooldoown=0
+        self.cooldown_count = 0
 
     def draw(self,window):
         window.blit(self.ship_img,(self.x,self.y))
@@ -143,16 +143,16 @@ class player(ship):
                 self.lasers.remove(laser)
             else:
                 for obj in objs:
-                    if laser.collision(objs):                   
+                    if laser.collision(obj):                   
                         objs.remove(obj) #enemy gets removed if hit
                         current_score+=10 #score increments
                         if laser in self.lasers:
                             self.lasers.remove(laser)
     
-    def healthbar(self):
-        pygame.draw.rect(window,(255,0,0), (self.x. self.y + self.ship_img.get.height() + 10, self.ship_img.get.width(),10)) #red bar when damaged
-        pygame.draw.rect(window,(0,100,0), (self.x. self.y + self.ship_img.get.height() + 10, 
-                                    self.ship_img.get.width()*(1-((self.max_healath - self.healath )//self.max_healath)),10)) #green bar acutal health
+    def healthbar(self,window):
+        pygame.draw.rect(window,(255,0,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width(),10)) #red bar when damaged
+        pygame.draw.rect(window,(0,100,0), (self.x, self.y + self.ship_img.get_height() + 10, 
+                                    self.ship_img.get_width()*(1-((self.max_healath - self.health )//self.max_healath)),10)) #green bar acutal health
     
     def draw(self, window):
         super().draw(window)
@@ -188,7 +188,7 @@ def collide(obj_1, obj_2):
 
 def bool_enemy_col(current_enm,spawned_enms): #checking if enemies collide
     for enemy in spawned_enms:
-        if collide(current_enm,spawned_enms):
+        if collide(current_enm,enemy):
             return True
     return False
 
@@ -349,7 +349,7 @@ def menu():
             if event.type==pygame.QUIT:
                 run = False
             if event.type==pygame.MOUSEBUTTONDOWN:
-                core()
+                core()              
     pygame.quit()
 
 
