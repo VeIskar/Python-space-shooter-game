@@ -58,11 +58,11 @@ class ship:
         for laser in self.lasers: #each laser that player shoots is displayed on screen moving
             laser.move(velocity)
 
-        if laser.off_screen(height): #removing if offscreen
-            self.lasers.remove(laser)
-        elif laser.collision(objs): #if laser hits health gets reduced
-            objs.health -=10
-            self.lasers.remove(laser)
+            if laser.off_screen(height): #removing if offscreen
+                self.lasers.remove(laser)
+            elif laser.collision(objs): #if laser hits health gets reduced
+                objs.health -=10
+                self.lasers.remove(laser)
 
 
     #cooldown
@@ -70,20 +70,20 @@ class ship:
 
     #handling the counting of cooldown
     def cooldown_handler(self):
-        if self.cooldoown>=self.CooldownTime:
-            self.cooldown_handler=0
+        if self.cooldown_count>=self.CooldownTime:
+            self.cooldown_count=0
 
-        if self.cooldown_handler>0:
-            self.cooldown_handler+=1
+        if self.cooldown_count>0:
+            self.cooldown_count+=1
         
     
     def shoot_laser(self):
-        if self.cooldoown==0:
+        if self.cooldown_count==0:
             laser_ =Laser(self.x,self.y,self.laser_img)
             self.lasers.append(laser_)
 
             # satrting cooldown again
-            self.cooldoown=1
+            self.cooldown_count=1
             
 
     #actual height and width of ship image
@@ -145,7 +145,7 @@ class player(ship):
                 for obj in objs:
                     if laser.collision(obj):                   
                         objs.remove(obj) #enemy gets removed if hit
-                        current_score+=10 #score increments
+                        self.current_score+=10 #score increments
                         if laser in self.lasers:
                             self.lasers.remove(laser)
     
@@ -179,6 +179,13 @@ class enemy_(ship):
         #enemy ships will move only down
         self.y+=vel
 
+    def shoot_laser(self):
+        if self.cooldown_count==0:
+            laser_ =Laser(self.x-30,self.y,self.laser_img)
+            self.lasers.append(laser_)
+
+            self.cooldown_count=1
+
 
 def collide(obj_1, obj_2):
     offset_x = obj_2.x - obj_1.x #distance from object 1 to 2
@@ -205,7 +212,7 @@ def core():
 
     enemeis=[]
     amount_enem=5 #enemies will come in waves with increasing amounts
-    vel_enemy=4
+    vel_enemy=2
 
 
     lvl=0
@@ -228,8 +235,8 @@ def core():
 
         #dispalying text
         window.blit(lives_label,(10,10))
-        window.blit(level_label,(width-level_label.get_width()-10,10))
-        window.blit(score_label,(width-level_label.get_width()-10,25))
+        window.blit(level_label,(width-level_label.get_width()-33,10))
+        window.blit(score_label,(width-level_label.get_width()-33,35))
 
         #displaying enemies on screen
         for enemy in enemeis:
@@ -301,14 +308,14 @@ def core():
 
         for enemy in enemeis[:]: #copy of enemies we dont modify list we are looping through
             enemy.movement(vel_enemy)
-            enemy.move_lasers(laser_vel,player)
+            enemy.move_lasers(laser_vel, players_ship)
 
-            if random.randrange(0,120) is True: #enemy shoot at random pace
+            if random.randrange(0,120)==1: #enemy shoot at random pace
                 enemy.shoot_laser()
             
             if collide(enemy,players_ship): #player and enemy collision
                 players_ship.health-=10
-                enemy.remove(enemy)
+                enemeis.remove(enemy)
  
             #removing enemies
             if enemy.y+enemy.get_height()>height:
@@ -317,7 +324,7 @@ def core():
 
             #score increasing if we hit enemy
                     
-        player.move_lasers(-laser_vel, enemeis) #negative velocity so it goes up
+        players_ship.move_lasers(-laser_vel,enemeis) #negative velocity so it goes up
 
         pygame.display.update()
 
