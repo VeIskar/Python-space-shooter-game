@@ -152,7 +152,7 @@ class player(ship):
     def healthbar(self,window):
         pygame.draw.rect(window,(255,0,0), (self.x, self.y + self.ship_img.get_height() + 10, self.ship_img.get_width(),10)) #red bar when damaged
         pygame.draw.rect(window,(0,100,0), (self.x, self.y + self.ship_img.get_height() + 10, 
-                                    self.ship_img.get_width()*(1-((self.max_healath - self.health )//self.max_healath)),10)) #green bar acutal health
+                                    self.ship_img.get_width()*(self.health/self.max_healath),10)) #green bar acutal health
     
     def draw(self, window):
         super().draw(window)
@@ -286,7 +286,7 @@ def core():
                 quit()
             elif event.type==pygame.KEYDOWN: #pausing the game
                 if event.key==pygame.K_p:
-                    is_paused = True
+                    is_paused = not is_paused
             
 
         keys_movement=pygame.key.get_pressed()
@@ -302,29 +302,31 @@ def core():
                 players_ship.y +=vel_player
             if keys_movement[pygame.K_SPACE]: #shooting laser
                 players_ship.shoot_laser()
-        else:
-            pausedgame()
+        
         
 
-        for enemy in enemeis[:]: #copy of enemies we dont modify list we are looping through
-            enemy.movement(vel_enemy)
-            enemy.move_lasers(laser_vel, players_ship)
+            for enemy in enemeis[:]: #copy of enemies we dont modify list we are looping through
+                enemy.movement(vel_enemy)
+                enemy.move_lasers(laser_vel, players_ship)
 
-            if random.randrange(0,120)==1: #enemy shoot at random pace
-                enemy.shoot_laser()
+                if random.randrange(0,120)==1: #enemy shoot at random pace
+                    enemy.shoot_laser()
+                
+                if collide(enemy,players_ship): #player and enemy collision
+                    players_ship.health-=10
+                    enemeis.remove(enemy)
+    
+                #removing enemies
+                if enemy.y+enemy.get_height()>height:
+                    player_lives-=1
+                    enemeis.remove(enemy)
+
+                #score increasing if we hit enemy
+                        
+            players_ship.move_lasers(-laser_vel,enemeis) #negative velocity so it goes up
             
-            if collide(enemy,players_ship): #player and enemy collision
-                players_ship.health-=10
-                enemeis.remove(enemy)
- 
-            #removing enemies
-            if enemy.y+enemy.get_height()>height:
-                player_lives-=1
-                enemeis.remove(enemy)
-
-            #score increasing if we hit enemy
-                    
-        players_ship.move_lasers(-laser_vel,enemeis) #negative velocity so it goes up
+        else:
+            pausedgame()    
 
         pygame.display.update()
 
