@@ -286,11 +286,15 @@ def core():
                 quit()
             elif event.type==pygame.KEYDOWN: #pausing the game
                 if event.key==pygame.K_p:
-                    is_paused = not is_paused
+                    #is_paused = not is_paused
+                    if is_paused:
+                        is_paused = False
+                    else:
+                        is_paused = True
             
 
         keys_movement=pygame.key.get_pressed()
-        
+                 
         if not is_paused:
             if keys_movement[pygame.K_LEFT] and players_ship.x -vel_player>0: #moving left with borders
                 players_ship.x -=vel_player
@@ -324,19 +328,16 @@ def core():
                 #score increasing if we hit enemy
                         
             players_ship.move_lasers(-laser_vel,enemeis) #negative velocity so it goes up
-            
-        else:
-            pausedgame()    
-
+             
+        if is_paused:
+            pausedgame()             
         pygame.display.update()
 
 
-def pausedgame():
-     
-     window.blit(background1,(0,0))
-     t_font = pygame.font.SysFont("comicsans",60)
-     t_text= t_font.render("GAME PAUSED",1, (255,255,255))
-     window.blit(t_text, (width/2 -t_text.get_width()/2, 350 ))
+def pausedgame():    
+    t_font = pygame.font.SysFont("comicsans",60)
+    t_text= t_font.render("GAME PAUSED",1, (255,255,255))
+    window.blit(t_text, (width/2 -t_text.get_width()/2, 350 ))
 
 def menu():
     run = True
@@ -346,7 +347,7 @@ def menu():
     while run:
         #displaying text of menu
         window.blit(background1,(0,0))
-        t_text= t_font.render("Press any button to begin",1, (255,255,255))
+        t_text= t_font.render("Press any key to begin",1, (255,255,255))
         t_pause_opt= t_font_other.render("Press P to pause the game",1,(255,255,255))
         
         window.blit(t_text, (width/2 -t_text.get_width()/2, 350 )) #text appears in the middle of screen
@@ -357,7 +358,7 @@ def menu():
         for event in pygame.event.get():
             if event.type==pygame.QUIT:
                 run = False
-            if event.type==pygame.MOUSEBUTTONDOWN:
+            if event.type==pygame.MOUSEBUTTONDOWN or event.type == pygame.KEYDOWN:
                 core()              
     pygame.quit()
 
