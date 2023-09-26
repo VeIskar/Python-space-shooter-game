@@ -42,5 +42,17 @@ To run this game project, follow these steps:
 5. Run and play the game.
 
 
+## Screenshots from game 
+
+# Few exapmles of how the game looks like:
+
+![game_pyt_1](https://github.com/VeIskar/Python-space-shooter-game/assets/110427103/c8f3a47e-1ec5-46ac-be4a-4eb4e5819b18)
+
+![game_pyt_2](https://github.com/VeIskar/Python-space-shooter-game/assets/110427103/651781a6-1ba3-4fe7-973c-5b0e7108cd7b)
+
+![game_pyt_3](https://github.com/VeIskar/Python-space-shooter-game/assets/110427103/96bc9738-d8ae-4324-bc74-d24aa2ad7eed)
+
+![game_pyt_4](https://github.com/VeIskar/Python-space-shooter-game/assets/110427103/e39b12cf-6567-4a53-aced-45ec15ad87d2)
+
 
 Readme file will be updated in case of any new features being added to the game
